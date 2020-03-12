@@ -113,6 +113,10 @@ namespace MainConsole.Classes
     }
 
 
+    public class Battlegrounds : Card
+    {
+    }
+
 
 
     public class RootObject
@@ -179,6 +183,9 @@ namespace MainConsole.Classes
 
         [JsonProperty("Galakrond's Awakening")]
         public List<GalakrondsAwakening> GalakrondsAwakening { get; set; }
+
+        [JsonProperty("Battlegrounds")]
+        public List<Battlegrounds> Battlegrounds { get; set; }
 
         public List<Mission> Missions { get; set; }
         public List<Credit> Credits { get; set; }

@@ -9,6 +9,7 @@ using System.Data;
 using System.IO;
 using System.Data.Entity.Validation;
 using System.Reflection;
+using System.Threading;
 
 namespace MainConsole.Classes
 {
@@ -19,10 +20,15 @@ namespace MainConsole.Classes
         private static string _regularImagesFilePath = @"file:///C:\HS_RegularCardsTemp\";
         private static string _goldImagesFilePath = @"file:///C:\HS_GoldCardsTemp\";
         private static string _csvFilePath = @"file:///C:\HS_CardsCSV\";
+        private static bool _allCards = false;
 
         public static string JSON_Content
         {
             get { return jsonContent; }
+        }
+        public static bool AllCards
+        {
+            get { return _allCards; }
         }
 
         public static string RegularImagesFilePath
@@ -77,7 +83,9 @@ namespace MainConsole.Classes
             listAllCards.AddRange(cards.SaviorsofUldum);
             listAllCards.AddRange(cards.DescentofDragons);
             listAllCards.AddRange(cards.GalakrondsAwakening);
+            listAllCards.AddRange(cards.Battlegrounds);
 
+           
             foreach (var item in listAllCards)
             {
                 if (item.img != null)
@@ -95,12 +103,25 @@ namespace MainConsole.Classes
 
         public static void GetAllCards(int isCollectible)
         {
+            _allCards = (isCollectible == 0);
+            //You will need an Auoth code from -> https://rapidapi.com/omgvamp/api/hearthstone
             var url = "https://omgvamp-hearthstone-v1.p.mashape.com/cards";
             var client = new WebClient();
             client.Headers.Set("X-Mashape-Key", "URzOTo39w1mshcfB4WzfWVaRrc4up1CdK4XjsnYFfZsescLikL");
             client.QueryString.Set("collectible", isCollectible.ToString()); // enter "1" for only collectible cards
-            var downloadedJsonContent = client.DownloadString(url);
-            jsonContent = downloadedJsonContent;
+            try
+            {
+                var downloadedJsonContent = client.DownloadString(url);
+                jsonContent = downloadedJsonContent;
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e.ToString());
+                Console.ResetColor();
+                Thread.CurrentThread.Abort();
+            }
+            
         }
 
         public static int DownloadRegularImageFiles()

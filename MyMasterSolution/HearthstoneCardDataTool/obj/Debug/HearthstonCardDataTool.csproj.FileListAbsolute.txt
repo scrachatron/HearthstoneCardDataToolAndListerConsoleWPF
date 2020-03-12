@@ -62,3 +62,4 @@ C:\Users\scrac\Source\Repos\scrachatron\HearthstoneCardDataToolAndListerConsoleW
 C:\Users\scrac\Source\Repos\scrachatron\HearthstoneCardDataToolAndListerConsoleWPF\MyMasterSolution\HearthstoneCardDataTool\obj\Debug\HearthstonCardDataTool.csproj.CopyComplete
 C:\Users\scrac\Source\Repos\scrachatron\HearthstoneCardDataToolAndListerConsoleWPF\MyMasterSolution\HearthstoneCardDataTool\obj\Debug\HearthstonCardDataTool.exe
 C:\Users\scrac\Source\Repos\scrachatron\HearthstoneCardDataToolAndListerConsoleWPF\MyMasterSolution\HearthstoneCardDataTool\obj\Debug\HearthstonCardDataTool.pdb
+C:\Users\scrac\Source\Repos\scrachatron\HearthstoneCardDataToolAndListerConsoleWPF\MyMasterSolution\HearthstoneCardDataTool\obj\Debug\HearthstonCardDataTool.csprojAssemblyReference.cache
