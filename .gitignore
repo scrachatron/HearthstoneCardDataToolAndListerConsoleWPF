@@ -2,6 +2,8 @@
 Thumbs.db
 ehthumbs.db
 
+*.jfm
+
 # Folder config file
 Desktop.ini
 
@@ -46,3 +48,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 /MyMasterSolution/.vs/MyMasterSolution/v15/Server/sqlite3
+/.vs/HearthstoneCardDataToolAndListerConsoleWPF/v16/.suo
+/MyMasterSolution/.vs/MyMasterSolution/v16/Server/sqlite3/db.lock
+/MyMasterSolution/.vs/MyMasterSolution/v16/Server/sqlite3/storage.ide
+/MyMasterSolution/.vs/MyMasterSolution/v16/Server/sqlite3/storage.ide-shm
+/MyMasterSolution/.vs/MyMasterSolution/v16/Server/sqlite3/storage.ide-wal

@@ -20,7 +20,9 @@ namespace MainConsole.Classes
         private static string _regularImagesFilePath = @"file:///C:\HS_RegularCardsTemp\";
         private static string _goldImagesFilePath = @"file:///C:\HS_GoldCardsTemp\";
         private static string _csvFilePath = @"file:///C:\HS_CardsCSV\";
+        private static string _fileStructurePath = @"file:///C:\HS_Cards\";
         private static bool _allCards = false;
+
 
         public static string JSON_Content
         {
@@ -45,6 +47,11 @@ namespace MainConsole.Classes
         {
             get { return _csvFilePath; }
             set { _csvFilePath = value; }
+        }
+        public static string FileStructurePath
+        {
+            get { return _fileStructurePath; }
+            set { _fileStructurePath = value; }
         }
 
 
@@ -84,7 +91,7 @@ namespace MainConsole.Classes
             listAllCards.AddRange(cards.DescentofDragons);
             listAllCards.AddRange(cards.GalakrondsAwakening);
             listAllCards.AddRange(cards.Battlegrounds);
-
+            listAllCards.AddRange(cards.ScholomanceAcademy);
            
             foreach (var item in listAllCards)
             {
@@ -105,9 +112,9 @@ namespace MainConsole.Classes
         {
             _allCards = (isCollectible == 0);
             //You will need an Auoth code from -> https://rapidapi.com/omgvamp/api/hearthstone
-            var url = "https://omgvamp-hearthstone-v1.p.mashape.com/cards";
+            var url = "https://omgvamp-hearthstone-v1.p.rapidapi.com/cards";
             var client = new WebClient();
-            client.Headers.Set("X-Mashape-Key", "URzOTo39w1mshcfB4WzfWVaRrc4up1CdK4XjsnYFfZsescLikL");
+            client.Headers.Set("X-Mashape-Key", "rGxlSNahgfmsh3E743mE9E9cJbAFp1srKFJjsnIDCNVS6V4SGt");
             client.QueryString.Set("collectible", isCollectible.ToString()); // enter "1" for only collectible cards
             try
             {
