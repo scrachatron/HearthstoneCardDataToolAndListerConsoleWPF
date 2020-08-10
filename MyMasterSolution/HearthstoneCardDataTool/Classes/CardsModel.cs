@@ -117,7 +117,10 @@ namespace MainConsole.Classes
     {
     }
 
+    public class ScholomanceAcademy : Card
+    {
 
+    }
 
     public class RootObject
     {
@@ -186,6 +189,9 @@ namespace MainConsole.Classes
 
         [JsonProperty("Battlegrounds")]
         public List<Battlegrounds> Battlegrounds { get; set; }
+
+        [JsonProperty("Scholomance Academy")]
+        public List<ScholomanceAcademy> ScholomanceAcademy { get; set; }
 
         public List<Mission> Missions { get; set; }
         public List<Credit> Credits { get; set; }

@@ -33,6 +33,7 @@ namespace MainConsole
                 Console.WriteLine("");
                 Console.Write("Download"); Console.CursorLeft = 13; Console.Write("[D]"); Console.CursorLeft = 20; Console.WriteLine("|    Download JSON card data from web api");
                 Console.Write("Store"); Console.CursorLeft = 13; Console.Write("[S]"); Console.CursorLeft = 20; Console.WriteLine("|    Store the JSON data in memory");
+                Console.Write("Audio"); Console.CursorLeft = 13; Console.Write("[A]"); Console.CursorLeft = 20; Console.WriteLine("|    Audio Manager");
                 Console.WriteLine("");
                 Console.Write("Quit"); Console.CursorLeft = 13; Console.Write("[Q]"); Console.CursorLeft = 20; Console.WriteLine("|    Quit the application");
 
@@ -74,6 +75,27 @@ namespace MainConsole
                         {
                             Environment.Exit(0);
                         }
+                        break;
+                    case "A":
+                        if (WebServiceManager.JSON_Content == null)
+                        {
+                            Console.WriteLine("There is no JSON data preasent.");
+                            if (DialogBox("would you like to download the JSON data?"))
+                                DisplayDownloadUI();
+                            else
+                            {
+                                Console.WriteLine("Cannot create file structure without data");
+                                Console.WriteLine("Press any Key to continue");
+                                Console.ReadKey();
+                            }
+                        }
+                        else
+                        {
+                            SetupFolderStructure();
+                        }
+                        // Set up folder structure with what's based in memory
+
+
                         break;
                     default:
                         Console.WriteLine("Unrecognised command please try again");
@@ -225,11 +247,12 @@ namespace MainConsole
             }
         }
 
-       
         public static void GetCards(object par)
         {
             WebServiceManager.GetAllCards((int)par);
         }
+
+
 
         private static void DownloadAllRegularCardImages()
         {
@@ -426,7 +449,7 @@ namespace MainConsole
 
                 uriCsvFilePath = new Uri(@"file:///" + Console.ReadLine());
             }
-            Directory.CreateDirectory(Path.GetDirectoryName(uriCsvFilePath.LocalPath));
+          Directory.CreateDirectory(Path.GetDirectoryName(uriCsvFilePath.LocalPath));
 
 
             string filename = "";
@@ -524,6 +547,131 @@ namespace MainConsole
                 Console.WriteLine("----------------------");
                 Console.ReadKey();
             }
+            DisplayConsoleUI();
+        }
+
+        private static void SetupFolderStructure()
+        {
+            Console.WriteLine("\r\n");
+            if (WebServiceManager.JSON_Content == null)
+            {
+                Console.WriteLine("The json card data has not been downloaded, you must download the data first.");
+                DisplayDownloadUI();
+            }
+
+            Uri uriCsvFilePath = new Uri(WebServiceManager.FileStructurePath);
+            List<Card> listCards = WebServiceManager.ProvideCardList();
+
+            Console.WriteLine("\r\n");
+            Console.WriteLine("The Folder structure will be created in: " + uriCsvFilePath.LocalPath);
+            Console.WriteLine("\r\n");
+
+            if (DialogBox("Do you want to change the path for the structure?"))
+            {
+                Console.WriteLine("\r\n");
+                Console.WriteLine("Enter new path for the strructure file:");
+
+                uriCsvFilePath = new Uri(@"file:///" + Console.ReadLine());
+            }
+            Directory.CreateDirectory(Path.GetDirectoryName(uriCsvFilePath.LocalPath));
+
+
+            string filename = "";
+
+            if (WebServiceManager.AllCards)
+            {
+                filename = "HS_Card_All_Sounds/";
+            }
+            else
+            {
+                filename = "HS_Card_Sounds/";
+            }
+            Console.WriteLine("Structure will be created within: " + uriCsvFilePath.LocalPath + filename);
+
+            if (DialogBox("Continue?"))
+            {
+                DirectoryInfo di = new DirectoryInfo(uriCsvFilePath.LocalPath + filename);
+                di.Create();
+                System.IO.Directory.CreateDirectory(uriCsvFilePath.LocalPath + "Sounds");
+                foreach (var item in listCards)
+                {
+                    di.CreateSubdirectory(item.cardId);
+                    di.CreateSubdirectory(item.cardId + "/Attack");
+                    di.CreateSubdirectory(item.cardId + "/Play");
+                    di.CreateSubdirectory(item.cardId + "/Death");
+
+                }
+
+                Console.WriteLine("\r\n");
+                Console.WriteLine("DONE Creating folder structure.");
+
+                Console.WriteLine("\r\n");
+                Console.WriteLine("----------------------");
+                Console.ReadKey();
+            }
+
+
+            //Sound Sorting Happens Here
+            Console.WriteLine("In order to do the Next Step Please Ensure you have manually downloaded all the sounds already");
+            Console.WriteLine("You can follow the tutorial listed Hereto do so: https://www.youtube.com/watch?v=kCPoE0q4_HQ");
+            Console.WriteLine("Place your Files Within the Folder:  | " + uriCsvFilePath.LocalPath + "Sounds");
+            Console.WriteLine("Press [Enter] to continue and sort the available sounds into their folders");
+            Console.ReadLine();
+
+            if (System.IO.Directory.Exists(uriCsvFilePath.LocalPath + "Sounds"))
+            {
+                string[] files = System.IO.Directory.GetFiles(uriCsvFilePath.LocalPath + "Sounds");
+
+                if (files.Length > 0)
+                { 
+                string fileName = "";
+                    string sourcePath = uriCsvFilePath.LocalPath + "Sounds";
+
+
+                    // Copy the files and overwrite destination files if they already exist.
+                    foreach (string s in files)
+                    {
+                        foreach (var item in listCards)
+                        {
+                            if (s.Contains(item.cardId))
+                            {
+                                fileName = System.IO.Path.GetFileName(s);
+                                string targetPath = uriCsvFilePath.LocalPath + filename + item.cardId;
+                                string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
+                                string destFile = System.IO.Path.Combine(targetPath, fileName);
+
+                                if (fileName.ToLower().Contains("play"))
+                                {
+                                    destFile = System.IO.Path.Combine(targetPath, "Play/" + fileName);
+                                }
+                                else if (fileName.ToLower().Contains("attack"))
+                                {
+                                    destFile = System.IO.Path.Combine(targetPath, "Attack/" + fileName);
+                                }
+                                else if (fileName.ToLower().Contains("death"))
+                                {
+                                    destFile = System.IO.Path.Combine(targetPath, "Death/" + fileName);
+                                }
+                                System.IO.File.Copy(s, destFile, true);
+
+                            }
+                        }
+                    }
+                    Console.WriteLine("DONE!!!!! press [Enter] to Continue");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("No files detected within the Sounds folder Please try again");
+                    Console.WriteLine("[Enter] to Continue");
+                    Console.ReadLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Source path does not exist!");
+            }
+
             DisplayConsoleUI();
         }
     }
